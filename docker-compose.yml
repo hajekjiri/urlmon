@@ -1,0 +1,21 @@
+version: "3.8"
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: urlmon
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d
+
+  api:
+    build: .
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 5000:80
+    depends_on:
+      - db
+
