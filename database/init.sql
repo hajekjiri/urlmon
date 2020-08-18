@@ -12,7 +12,7 @@ create table MonitoredEndpoints (
 	name varchar(100) not null,
 	url varchar(100) not null,
 	createdDate datetime not null,
-	lastCheckedDate datetime not null,
+	lastCheckedDate datetime,
 	monitoringInterval int not null,
 	ownerId int not null,
 	primary key (id),
