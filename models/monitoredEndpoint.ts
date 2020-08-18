@@ -48,12 +48,14 @@ export default class MonitoredEndpoint {
     }
   }
 
-  async save(): Promise<void> {
+  async save(): Promise<number> {
     await this.validate();
     const connection = getDbConnection();
-    await connection.execute(
+    const [info] = await connection.execute(
       'insert into MonitoredEndpoints values (null, ?, ?, ?, null, ?, ?)',
       [this.name, this.url, this.createdDate, this.monitoringInterval, this.ownerId],
     );
+    const result = JSON.parse(JSON.stringify(info));
+    return result.insertId;
   }
 }
