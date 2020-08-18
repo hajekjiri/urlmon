@@ -1,5 +1,5 @@
-import * as dotenv from 'dotenv-safe';
-import * as restify from 'restify';
+import dotenv from 'dotenv-safe';
+import restify from 'restify';
 import { initDbConnection } from './utils/database';
 
 async function main() {
