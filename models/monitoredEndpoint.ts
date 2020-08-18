@@ -1,6 +1,8 @@
 import { getDbConnection } from '../utils/database';
 
 export default class MonitoredEndpoint {
+  id: number | null;
+
   name: string;
 
   url: string;
@@ -15,6 +17,7 @@ export default class MonitoredEndpoint {
     url: string,
     monitoringInterval: number,
     ownerId: number) {
+    this.id = null;
     this.name = name;
     this.url = url;
     this.createdDate = new Date();
@@ -48,7 +51,7 @@ export default class MonitoredEndpoint {
     }
   }
 
-  async save(): Promise<number> {
+  async save(): Promise<void> {
     await this.validate();
     const connection = getDbConnection();
     const [info] = await connection.execute(
@@ -56,6 +59,6 @@ export default class MonitoredEndpoint {
       [this.name, this.url, this.createdDate, this.monitoringInterval, this.ownerId],
     );
     const result = JSON.parse(JSON.stringify(info));
-    return result.insertId;
+    this.id = result.insertId;
   }
 }

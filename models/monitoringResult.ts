@@ -1,6 +1,8 @@
 import { getDbConnection } from '../utils/database';
 
 export default class MonitoringResult {
+  id: number | null;
+
   checkedDate: Date;
 
   httpCode: number;
@@ -13,6 +15,7 @@ export default class MonitoringResult {
     httpCode: number,
     payloadFile: string,
     monitoredEndpointId: number) {
+    this.id = null;
     this.checkedDate = checkedDate;
     this.httpCode = httpCode;
     this.payloadFile = payloadFile;
@@ -47,7 +50,7 @@ export default class MonitoringResult {
     }
   }
 
-  async save(): Promise<number> {
+  async save(): Promise<void> {
     await this.validate();
     const connection = getDbConnection();
     const [info] = await connection.execute(
@@ -55,6 +58,6 @@ export default class MonitoringResult {
       [this.checkedDate, this.httpCode, this.payloadFile, this.monitoredEndpointId],
     );
     const result = JSON.parse(JSON.stringify(info));
-    return result.insertId;
+    this.id = result.insertId;
   }
 }
