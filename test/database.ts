@@ -1,4 +1,4 @@
-import dotenv = require('dotenv-safe');
+import * as dotenv from 'dotenv-safe';
 
 describe('database', () => {
   describe('configuration', () => {
