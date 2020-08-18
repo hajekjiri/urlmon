@@ -1,5 +1,5 @@
 {
-  "name": "url-monitor",
+  "name": "urlmon",
   "version": "1.0.0",
   "description": "Node.js microservice for monitoring http(s) URLs",
   "main": "server.ts",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hajekjiri/url-monitor.git"
+    "url": "git+https://github.com/hajekjiri/urlmon.git"
   },
   "author": "",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/hajekjiri/url-monitor/issues"
+    "url": "https://github.com/hajekjiri/urlmon/issues"
   },
-  "homepage": "https://github.com/hajekjiri/url-monitor#readme",
+  "homepage": "https://github.com/hajekjiri/urlmon#readme",
   "dependencies": {
     "@types/dotenv-safe": "^8.1.1",
     "@types/mysql2": "github:types/mysql2",
