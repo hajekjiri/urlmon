@@ -1,18 +1,6 @@
-import dotenv = require('dotenv-safe');
-import restify = require('restify');
-import mysql = require('mysql2/promise');
-
-async function getDbConnection(): Promise<mysql.Connection> {
-  return mysql.createConnection({
-    host: process.env.DB_HOST,
-    database: process.env.DB_NAME,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
-  }).catch(async () => {
-    await new Promise((resolve) => { setTimeout(resolve, 5000); });
-    return getDbConnection();
-  });
-}
+import * as dotenv from 'dotenv-safe';
+import * as restify from 'restify';
+import { initDbConnection } from './utils/database';
 
 async function main() {
   dotenv.config();
@@ -22,9 +10,8 @@ async function main() {
   });
 
   console.log('Connecting to database ...');
-  const connection = await getDbConnection().then(() => {
-    console.log('Successfully connected to database');
-  });
+  await initDbConnection();
+  console.log('Successfully connected to database');
 
   server.listen(5000, () => {
     console.log(`${server.name} listening at ${server.url}`);
