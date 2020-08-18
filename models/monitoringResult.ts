@@ -9,10 +9,11 @@ export default class MonitoringResult {
 
   monitoredEndpointId: number;
 
-  constructor(httpCode: number,
+  constructor(checkedDate: Date,
+    httpCode: number,
     payloadFile: string,
     monitoredEndpointId: number) {
-    this.checkedDate = new Date();
+    this.checkedDate = checkedDate;
     this.httpCode = httpCode;
     this.payloadFile = payloadFile;
     this.monitoredEndpointId = monitoredEndpointId;
