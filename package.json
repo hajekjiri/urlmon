@@ -1,0 +1,40 @@
+{
+  "name": "url-monitor",
+  "version": "1.0.0",
+  "description": "Node.js microservice for monitoring http(s) URLs",
+  "main": "server.ts",
+  "scripts": {
+    "test": "ts-mocha test/**/*.ts",
+    "build": "rm -rf build && tsc",
+    "start": "ts-node server.ts",
+    "start-dev": "nodemon"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hajekjiri/url-monitor.git"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/hajekjiri/url-monitor/issues"
+  },
+  "homepage": "https://github.com/hajekjiri/url-monitor#readme",
+  "dependencies": {
+    "@types/dotenv-safe": "^8.1.1",
+    "@types/mysql2": "github:types/mysql2",
+    "@types/node": "^14.6.0",
+    "@types/restify": "^8.4.2",
+    "dotenv-safe": "^8.2.0",
+    "mysql2": "^2.1.0",
+    "node-cron": "^2.0.3",
+    "restify": "^8.5.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7"
+  },
+  "devDependencies": {
+    "@types/mocha": "^8.0.3",
+    "mocha": "^8.1.1",
+    "nodemon": "^2.0.4",
+    "ts-mocha": "^7.0.0"
+  }
+}
