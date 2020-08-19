@@ -112,5 +112,9 @@ export default class MonitoredEndpoint {
     connection.execute('update MonitoringResults set payloadFile = ? where id = ?',
       [payloadFileName, monitoringResult.id]);
 
+    connection.execute(
+      'update MonitoredEndpoints set lastCheckedDate = ? where id = ?',
+      [date, this.id],
+    );
   }
 }
