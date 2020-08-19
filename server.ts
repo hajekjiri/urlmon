@@ -1,6 +1,7 @@
 import dotenv from 'dotenv-safe';
 import restify from 'restify';
 import { initDbConnection } from './utils/database';
+import { initializeTasks } from './utils/monitoring';
 
 async function main() {
   dotenv.config();
@@ -16,6 +17,8 @@ async function main() {
   server.listen(5000, () => {
     console.log(`${server.name} listening at ${server.url}`);
   });
+
+  initializeTasks();
 }
 
 main();
