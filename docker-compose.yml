@@ -4,11 +4,12 @@ services:
     image: mysql
     command: --default-authentication-plugin=mysql_native_password
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: urlmon
     volumes:
       - ./database:/docker-entrypoint-initdb.d
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "true"
+    env_file:
+      - .env
 
   api:
     build: .
