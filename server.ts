@@ -11,7 +11,14 @@ async function main() {
   });
 
   console.log('Connecting to database ...');
-  await initDbConnection();
+
+  /* eslint-disable no-await-in-loop */
+  while (!await initDbConnection(process.env.MYSQL_HOST)) {
+    console.log('db connection failed, retrying in 5 seconds ...');
+    await new Promise((resolve) => { setTimeout(resolve, 5000); });
+  }
+  /* eslint-enable no-await-in-loop */
+
   console.log('Successfully connected to database');
 
   server.listen(5000, () => {
