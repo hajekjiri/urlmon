@@ -1,3 +1,7 @@
+import axios from 'axios';
+import fs from 'fs';
+import mime from 'mime-types';
+import MonitoringResult from './monitoringResult';
 import { getDbConnection } from '../utils/database';
 
 export default class MonitoredEndpoint {
@@ -65,5 +69,32 @@ export default class MonitoredEndpoint {
     );
     const result = JSON.parse(JSON.stringify(info));
     this.id = result.insertId;
+  }
+
+  async check(): Promise<void> {
+    if (this.id === null) {
+      throw new Error('cannot check MonitoredEndpoint with null id');
+    }
+
+    const result = await axios.get(this.url);
+    const date = new Date(result.headers.date);
+    const extension = mime.extension(result.headers['content-type']) || 'unknown';
+
+    const monitoringResult = new MonitoringResult(
+      null,
+      date,
+      result.status,
+      null,
+      this.id,
+    );
+
+    await monitoringResult.save();
+    const payloadFileName = `${monitoringResult.id}.${extension}`;
+
+    const connection = getDbConnection();
+    await connection.execute('update MonitoringResults set payloadFile = ? where id = ?',
+      [payloadFileName, monitoringResult.id]);
+
+    fs.writeFileSync(`results/${payloadFileName}`, result.data);
   }
 }
