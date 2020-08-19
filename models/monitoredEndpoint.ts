@@ -15,12 +15,13 @@ export default class MonitoredEndpoint {
 
   constructor(name: string,
     url: string,
+    createdDate: Date,
     monitoringInterval: number,
     ownerId: number) {
     this.id = null;
     this.name = name;
     this.url = url;
-    this.createdDate = new Date();
+    this.createdDate = createdDate;
     this.monitoringInterval = monitoringInterval;
     this.ownerId = ownerId;
   }
