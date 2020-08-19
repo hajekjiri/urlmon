@@ -1,6 +1,7 @@
 import axios from 'axios';
 import fs from 'fs';
 import mime from 'mime-types';
+import urllib from 'url';
 import MonitoringResult from './monitoringResult';
 import { getDbConnection } from '../utils/database';
 
@@ -38,6 +39,11 @@ export default class MonitoredEndpoint {
 
     if (this.name.length > 100) {
       throw new Error('url of the endpoint must not exceed 100 characters');
+    }
+
+    const parsedUrl = urllib.parse(this.url);
+    if (parsedUrl.protocol !== 'http' && parsedUrl.protocol !== 'https') {
+      throw new Error('invalid protocol - only http and https are supported');
     }
 
     if (this.monitoringInterval < 60) {
