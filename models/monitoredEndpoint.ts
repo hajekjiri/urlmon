@@ -75,26 +75,42 @@ export default class MonitoredEndpoint {
     if (this.id === null) {
       throw new Error('cannot check MonitoredEndpoint with null id');
     }
+    console.log(`[${new Date().toISOString()}] Checking #${this.id} | ${this.name} | ${this.url} ...`);
 
-    const result = await axios.get(this.url);
-    const date = new Date(result.headers.date);
-    const extension = mime.extension(result.headers['content-type']) || 'unknown';
+    const date = new Date();
+    const result = await axios.get(this.url).catch(() => {
+      console.log(`there was an error while checking #${this.id}`);
+    });
+
+    let httpCode: number | null = null;
+    if (result) {
+      httpCode = result.status;
+    }
 
     const monitoringResult = new MonitoringResult(
       null,
       date,
-      result.status,
+      httpCode,
       null,
       this.id,
     );
 
     await monitoringResult.save();
-    const payloadFileName = `${monitoringResult.id}.${extension}`;
+
+    let payloadFileName: string | null = null;
+    if (result) {
+      const extension = mime.extension(result.headers['content-type']) || 'unknown';
+      payloadFileName = `${monitoringResult.id}.${extension}`;
+      fs.writeFile(`results/${payloadFileName}`, result.data, (err) => {
+        if (err) {
+          throw err;
+        }
+      });
+    }
 
     const connection = getDbConnection();
-    await connection.execute('update MonitoringResults set payloadFile = ? where id = ?',
+    connection.execute('update MonitoringResults set payloadFile = ? where id = ?',
       [payloadFileName, monitoringResult.id]);
 
-    fs.writeFileSync(`results/${payloadFileName}`, result.data);
   }
 }
