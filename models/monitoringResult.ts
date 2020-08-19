@@ -11,11 +11,12 @@ export default class MonitoringResult {
 
   monitoredEndpointId: number;
 
-  constructor(checkedDate: Date,
+  constructor(id: number | null,
+    checkedDate: Date,
     httpCode: number,
     payloadFile: string,
     monitoredEndpointId: number) {
-    this.id = null;
+    this.id = id;
     this.checkedDate = checkedDate;
     this.httpCode = httpCode;
     this.payloadFile = payloadFile;
@@ -51,6 +52,9 @@ export default class MonitoringResult {
   }
 
   async save(): Promise<void> {
+    if (this.id !== null) {
+      throw new Error('cannot save MonitoringResult with non-null id');
+    }
     await this.validate();
     const connection = getDbConnection();
     const [info] = await connection.execute(
