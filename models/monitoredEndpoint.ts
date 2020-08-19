@@ -54,6 +54,9 @@ export default class MonitoredEndpoint {
   }
 
   async save(): Promise<void> {
+    if (this.id !== null) {
+      throw new Error('cannot save MonitoredEndpoint with non-null id');
+    }
     await this.validate();
     const connection = getDbConnection();
     const [info] = await connection.execute(
