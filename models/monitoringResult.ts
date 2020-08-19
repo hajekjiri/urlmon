@@ -5,16 +5,16 @@ export default class MonitoringResult {
 
   checkedDate: Date;
 
-  httpCode: number;
+  httpCode: number | null;
 
-  payloadFile: string;
+  payloadFile: string | null;
 
   monitoredEndpointId: number;
 
   constructor(id: number | null,
     checkedDate: Date,
     httpCode: number,
-    payloadFile: string,
+    payloadFile: string | null,
     monitoredEndpointId: number) {
     this.id = id;
     this.checkedDate = checkedDate;
@@ -30,12 +30,13 @@ export default class MonitoringResult {
       501, 502, 503, 504, 505,
     ]);
 
-    if (!validHttpCodes.has(this.httpCode)) {
+    if (this.httpCode !== null && !validHttpCodes.has(this.httpCode)) {
       throw new Error(`${this.httpCode} is not a valid http code`);
     }
 
-    if (this.payloadFile.length > 100) {
-      throw new Error('name of the payload file must not exceed 100 characters');
+    if (this.payloadFile !== null
+      && (this.payloadFile.length < 3 || this.payloadFile.length > 100)) {
+      throw new Error('payload file name must be between 3 and 100 characters long');
     }
 
     const connection = getDbConnection();
