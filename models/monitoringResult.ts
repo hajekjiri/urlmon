@@ -13,7 +13,7 @@ export default class MonitoringResult {
 
   constructor(id: number | null,
     checkedDate: Date,
-    httpCode: number,
+    httpCode: number | null,
     payloadFile: string | null,
     monitoredEndpointId: number) {
     this.id = id;
