@@ -87,8 +87,10 @@ export default class MonitoredEndpoint {
     console.log(`[${new Date().toISOString()}] Checking #${this.id} | ${this.name} | ${this.url} ...`);
 
     const date = new Date();
+    let errorResponse: any = null;
     let errorMessage: string | null = null;
     const result = await axios.get(this.url).catch((e) => {
+      errorResponse = e;
       errorMessage = e.toString();
     });
 
@@ -99,6 +101,10 @@ export default class MonitoredEndpoint {
       httpCode = result.status;
       payload = result.data;
       contentType = result.headers['content-type'];
+    } else {
+      httpCode = errorResponse.response?.status || null;
+      payload = errorResponse.response?.data || null;
+      contentType = (errorResponse.response?.headers && errorResponse.response.headers['content-type']) || null;
     }
 
     const monitoringResult = new MonitoringResult(
