@@ -46,14 +46,20 @@ export async function createTask(id: number): Promise<void> {
   const [rows] = await connection.execute(
     'select * from MonitoredEndpoints where id = ? limit 1', [id],
   );
-  const result = JSON.parse(JSON.stringify(rows))[0];
+
+  const result = JSON.parse(JSON.stringify(rows));
+
+  if (result.length === 0) {
+    throw new Error(`cannot initialize task for non-existing endpoint (id ${id})`);
+  }
+
   const endpoint = new MonitoredEndpoint(
-    result.id,
-    result.name,
-    result.url,
-    result.createdDate,
-    result.monitoringInterval,
-    result.ownerId,
+    result[0].id,
+    result[0].name,
+    result[0].url,
+    result[0].createdDate,
+    result[0].monitoringInterval,
+    result[0].ownerId,
   );
 
   if (endpoint.id === null) {
