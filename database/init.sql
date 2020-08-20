@@ -1,9 +1,9 @@
 use `urlmon`;
 create table Users (
 	id int auto_increment not null,
-	username varchar(100) not null,
+	username varchar(50) not null,
 	email varchar(100) not null,
-	accessToken varchar(100) not null,
+	accessToken varchar(50) not null,
 	primary key (id)
 );
 
