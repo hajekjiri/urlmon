@@ -41,7 +41,7 @@ export default class MonitoredEndpoint {
     }
 
     const parsedUrl = urllib.parse(this.url);
-    if (parsedUrl.protocol !== 'http' && parsedUrl.protocol !== 'https') {
+    if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
       throw new InvalidArgumentError('invalid protocol - only http and https are supported');
     }
 
