@@ -128,7 +128,7 @@ insert into Users values (null, 'John Doe', 'john@doe.xyz', 'hb6fk9x3-978c-fr4l-
 * can be null
 * maximum size is 4 GiB
 ##### error
-* reason why no response was received
+* error that came up while checking the endpoint
 * string
 * can be null
 * maximum length is 200 characters
