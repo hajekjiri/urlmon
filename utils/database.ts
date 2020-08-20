@@ -18,5 +18,8 @@ export async function initDbConnection(): Promise<boolean> {
 }
 
 export function getDbConnection(): mysql.Connection {
-  return <mysql.Connection>db;
+  if (!db) {
+    throw new Error('database is not initialized');
+  }
+  return db;
 }
