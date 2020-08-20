@@ -36,7 +36,7 @@ export default class MonitoredEndpoint {
   }
 
   async validate(): Promise<void> {
-    if (this.name.length > 100) {
+    if (this.name.length < 3 || this.name.length > 100) {
       throw new InvalidArgumentError('name of the endpoint must not exceed 100 characters');
     }
 
