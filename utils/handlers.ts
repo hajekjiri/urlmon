@@ -83,6 +83,46 @@ export async function getEndpointResultsHandler(
   next();
 }
 
+export async function getResultHandler(
+  req: restify.Request,
+  res: restify.Response,
+  next:restify.Next,
+): Promise<void> {
+  try {
+    const userId = await getUserIdFromAccessToken(req.headers['access-token']);
+    const connection = getDbConnection();
+    const [rows] = await connection.execute(
+      'select mr.* from MonitoringResults mr join MonitoredEndpoints me on mr.monitoredEndpointId = me.id where mr.id = ? and ownerId = ? limit 1',
+      [req.params.id, userId],
+    );
+    const result = JSON.parse(JSON.stringify(rows));
+
+    if (result.length === 0) {
+      throw new ResourceNotFoundError(`id ${req.params.id} doesn't correspond to any of your results`);
+    }
+
+    res.send(200, { data: result[0] });
+  } catch (e) {
+    let httpCode: number;
+    switch (e.name) {
+      case 'InvalidArgumentError':
+        httpCode = 400;
+        break;
+      case 'InvalidCredentialsError':
+        httpCode = 401;
+        break;
+      case 'ResourceNotFoundError':
+        httpCode = 404;
+        break;
+      default:
+        httpCode = 500;
+        break;
+    }
+    res.send(httpCode, { error: e.message });
+  }
+  next();
+}
+
 export async function postEndpointHandler(
   req: restify.Request,
   res: restify.Response,

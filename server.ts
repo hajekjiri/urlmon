@@ -5,6 +5,7 @@ import { initializeTasks } from './utils/monitoring';
 import {
   getEndpointsHandler,
   getEndpointResultsHandler,
+  getResultHandler,
   postEndpointHandler,
   deleteEndpointHandler,
   patchEndpointHandler,
@@ -32,6 +33,7 @@ async function main() {
 
   server.get('/endpoints', getEndpointsHandler);
   server.get('/endpoint/:id/results', getEndpointResultsHandler);
+  server.get('/result/:id', getResultHandler);
   server.post('/endpoint', postEndpointHandler);
   server.del('/endpoint/:id', deleteEndpointHandler);
   server.patch('/endpoint/:id', patchEndpointHandler);
