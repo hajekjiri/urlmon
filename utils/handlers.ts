@@ -203,3 +203,77 @@ export async function deleteEndpointHandler(
   }
   next();
 }
+
+export async function patchEndpointHandler(
+  req: restify.Request,
+  res: restify.Response,
+  next:restify.Next,
+): Promise<void> {
+  try {
+    const userId = await getUserIdFromAccessToken(req.headers['access-token']);
+
+    const connection = getDbConnection();
+
+    const [rows] = await connection.execute(
+      'select * from MonitoredEndpoints where id = ? and ownerId = ? limit 1',
+      [req.params.id, userId],
+    );
+
+    const result = JSON.parse(JSON.stringify(rows));
+    if (result.length === 0) {
+      throw new ResourceNotFoundError(`id ${req.params.id} doesn't correspond to any of your endpoints`);
+    }
+
+    removeTask(Number(req.params.id));
+
+    const endpoint = new MonitoredEndpoint(
+      result[0].id,
+      result[0].name,
+      result[0].url,
+      result[0].createdDate,
+      result[0].monitoringInterval,
+      result[0].ownerId,
+    );
+
+    if (req.params.name) {
+      endpoint.name = req.params.name;
+    }
+
+    if (req.params.url) {
+      endpoint.url = req.params.url;
+    }
+
+    if (req.params.monitoringInterval) {
+      endpoint.monitoringInterval = req.params.monitoringInterval;
+    }
+
+    await endpoint.validate();
+
+    await connection.execute(
+      'update MonitoredEndpoints set name = ?, url = ?, monitoringInterval = ? where id = ?',
+      [endpoint.name, endpoint.url, endpoint.monitoringInterval, req.params.id],
+    );
+
+    await createTask(req.params.id);
+
+    res.send(200, { data: endpoint });
+  } catch (e) {
+    let httpCode: number;
+    switch (e.name) {
+      case 'InvalidArgumentError':
+        httpCode = 400;
+        break;
+      case 'InvalidCredentialsError':
+        httpCode = 401;
+        break;
+      case 'ResourceNotFoundError':
+        httpCode = 404;
+        break;
+      default:
+        httpCode = 500;
+        break;
+    }
+    res.send(httpCode, { error: e.message });
+  }
+  next();
+}

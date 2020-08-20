@@ -7,6 +7,7 @@ import {
   getEndpointResultsHandler,
   postEndpointHandler,
   deleteEndpointHandler,
+  patchEndpointHandler,
 } from './utils/handlers';
 
 async function main() {
@@ -33,6 +34,7 @@ async function main() {
   server.get('/endpoint/:id/results', getEndpointResultsHandler);
   server.post('/endpoint', postEndpointHandler);
   server.del('/endpoint/:id', deleteEndpointHandler);
+  server.patch('/endpoint/:id', patchEndpointHandler);
 
   server.listen(5000, () => {
     console.log(`${server.name} listening at ${server.url}`);
