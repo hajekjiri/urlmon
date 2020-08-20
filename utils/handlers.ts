@@ -247,7 +247,7 @@ export async function patchEndpointHandler(
     }
 
     if (req.params.monitoringInterval) {
-      endpoint.monitoringInterval = req.params.monitoringInterval;
+      endpoint.monitoringInterval = Number(req.params.monitoringInterval);
     }
 
     await endpoint.validate();
