@@ -5,6 +5,7 @@ import { initializeTasks } from './utils/monitoring';
 import {
   getEndpointsHandler,
   getEndpointResultsHandler,
+  postEndpointHandler,
 } from './utils/handlers';
 
 async function main() {
@@ -13,6 +14,8 @@ async function main() {
   const server = restify.createServer({
     name: 'urlmon api',
   });
+
+  server.use(restify.plugins.bodyParser());
 
   console.log('Connecting to database ...');
 
@@ -27,6 +30,7 @@ async function main() {
 
   server.get('/endpoints', getEndpointsHandler);
   server.get('/endpoint/:id/results', getEndpointResultsHandler);
+  server.post('/endpoint', postEndpointHandler);
 
   server.listen(5000, () => {
     console.log(`${server.name} listening at ${server.url}`);
