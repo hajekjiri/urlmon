@@ -4,6 +4,7 @@ import { initDbConnection } from './utils/database';
 import { initializeTasks } from './utils/monitoring';
 import {
   getEndpointsHandler,
+  getEndpointResultsHandler,
 } from './utils/handlers';
 
 async function main() {
@@ -25,6 +26,7 @@ async function main() {
   console.log('Successfully connected to database');
 
   server.get('/endpoints', getEndpointsHandler);
+  server.get('/endpoint/:id/results', getEndpointResultsHandler);
 
   server.listen(5000, () => {
     console.log(`${server.name} listening at ${server.url}`);
