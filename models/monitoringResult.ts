@@ -38,15 +38,15 @@ export default class MonitoringResult {
       501, 502, 503, 504, 505,
     ]);
 
-    if (this.httpCode !== null && !validHttpCodes.has(this.httpCode)) {
+    if (this.httpCode && !validHttpCodes.has(this.httpCode)) {
       throw new Error(`${this.httpCode} is not a valid http code`);
     }
 
-    if (this.contentType !== null && this.contentType.length > 100) {
+    if (this.contentType && this.contentType.length > 100) {
       this.contentType = this.contentType.substr(0, 100);
     }
 
-    if (this.error !== null && this.error.length > 200) {
+    if (this.error && this.error.length > 200) {
       this.error = this.error.substr(0, 200);
       console.log(`new length: ${this.error.length}`);
     }
