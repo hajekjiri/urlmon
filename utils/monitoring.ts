@@ -33,11 +33,11 @@ export async function initializeTasks(): Promise<void> {
 }
 
 export function removeTask(id: number): void {
-  const t = tasks.get(id);
-  if (t === undefined) {
+  const task = tasks.get(id);
+  if (!task) {
     throw new Error(`cannot remove task - there is no active task with id ${id}`);
   }
-  clearTimeout(t);
+  clearTimeout(task);
   console.log(`Removed task #${id}`);
 }
 
