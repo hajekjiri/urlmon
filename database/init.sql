@@ -1,4 +1,5 @@
 use `urlmon`;
+--   ^^^^^^ the name of your database goes here
 create table Users (
 	id int auto_increment not null,
 	username varchar(50) not null,
