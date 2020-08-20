@@ -21,8 +21,14 @@ export async function getEndpointsHandler(
   } catch (e) {
     let httpCode: number;
     switch (e.name) {
+      case 'InvalidArgumentError':
+        httpCode = 400;
+        break;
       case 'InvalidCredentialsError':
         httpCode = 401;
+        break;
+      case 'ResourceNotFoundError':
+        httpCode = 404;
         break;
       default:
         httpCode = 500;
@@ -59,6 +65,9 @@ export async function getEndpointResultsHandler(
   } catch (e) {
     let httpCode: number;
     switch (e.name) {
+      case 'InvalidArgumentError':
+        httpCode = 400;
+        break;
       case 'InvalidCredentialsError':
         httpCode = 401;
         break;
@@ -114,11 +123,14 @@ export async function postEndpointHandler(
   } catch (e) {
     let httpCode: number;
     switch (e.name) {
+      case 'InvalidArgumentError':
+        httpCode = 400;
+        break;
       case 'InvalidCredentialsError':
         httpCode = 401;
         break;
-      case 'InvalidArgumentError':
-        httpCode = 400;
+      case 'ResourceNotFoundError':
+        httpCode = 404;
         break;
       default:
         httpCode = 500;
@@ -174,6 +186,9 @@ export async function deleteEndpointHandler(
   } catch (e) {
     let httpCode: number;
     switch (e.name) {
+      case 'InvalidArgumentError':
+        httpCode = 400;
+        break;
       case 'InvalidCredentialsError':
         httpCode = 401;
         break;
