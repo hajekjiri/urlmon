@@ -23,7 +23,9 @@ create table MonitoringResults (
 	id int auto_increment not null,
 	checkedDate datetime not null,
 	httpCode int,
-	payloadFile varchar(100),
+	contentType varchar(100),
+	payload longtext,
+	error varchar(200),
 	monitoredEndpointId int not null,
 	primary key (id),
 	foreign key (monitoredEndpointId) references MonitoredEndpoints(id)

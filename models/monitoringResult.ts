@@ -7,19 +7,27 @@ export default class MonitoringResult {
 
   httpCode: number | null;
 
-  payloadFile: string | null;
+  contentType: string | null;
+
+  payload: string | null;
+
+  error: string | null;
 
   monitoredEndpointId: number;
 
   constructor(id: number | null,
     checkedDate: Date,
     httpCode: number | null,
-    payloadFile: string | null,
+    contentType: string | null,
+    payload: string | null,
+    error: string | null,
     monitoredEndpointId: number) {
     this.id = id;
     this.checkedDate = checkedDate;
     this.httpCode = httpCode;
-    this.payloadFile = payloadFile;
+    this.contentType = contentType;
+    this.payload = payload;
+    this.error = error;
     this.monitoredEndpointId = monitoredEndpointId;
   }
 
@@ -34,9 +42,13 @@ export default class MonitoringResult {
       throw new Error(`${this.httpCode} is not a valid http code`);
     }
 
-    if (this.payloadFile !== null
-      && (this.payloadFile.length < 3 || this.payloadFile.length > 100)) {
-      throw new Error('payload file name must be between 3 and 100 characters long');
+    if (this.contentType !== null && this.contentType.length > 100) {
+      this.contentType = this.contentType.substr(0, 100);
+    }
+
+    if (this.error !== null && this.error.length > 200) {
+      this.error = this.error.substr(0, 200);
+      console.log(`new length: ${this.error.length}`);
     }
 
     const connection = getDbConnection();
@@ -59,8 +71,9 @@ export default class MonitoringResult {
     await this.validate();
     const connection = getDbConnection();
     const [info] = await connection.execute(
-      'insert into MonitoringResults values (null, ?, ?, ?, ?)',
-      [this.checkedDate, this.httpCode, this.payloadFile, this.monitoredEndpointId],
+      'insert into MonitoringResults values (null, ?, ?, ?, ?, ?, ?)',
+      [this.checkedDate, this.httpCode, this.contentType, this.payload, this.error,
+        this.monitoredEndpointId],
     );
     const result = JSON.parse(JSON.stringify(info));
     this.id = result.insertId;

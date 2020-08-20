@@ -1,6 +1,4 @@
 import axios from 'axios';
-import fs from 'fs';
-import mime from 'mime-types';
 import urllib from 'url';
 import MonitoringResult from './monitoringResult';
 import { getDbConnection } from '../utils/database';
@@ -84,40 +82,33 @@ export default class MonitoredEndpoint {
     console.log(`[${new Date().toISOString()}] Checking #${this.id} | ${this.name} | ${this.url} ...`);
 
     const date = new Date();
-    const result = await axios.get(this.url).catch(() => {
-      console.log(`there was an error while checking #${this.id}`);
+    let errorMessage: string | null = null;
+    const result = await axios.get(this.url).catch((e) => {
+      errorMessage = e.toString();
     });
 
     let httpCode: number | null = null;
+    let payload: string | null = null;
+    let contentType: string | null = null;
     if (result) {
       httpCode = result.status;
+      payload = result.data;
+      contentType = result.headers['content-type'];
     }
 
     const monitoringResult = new MonitoringResult(
       null,
       date,
       httpCode,
-      null,
+      contentType,
+      payload,
+      errorMessage,
       this.id,
     );
 
     await monitoringResult.save();
 
-    let payloadFileName: string | null = null;
-    if (result) {
-      const extension = mime.extension(result.headers['content-type']) || 'unknown';
-      payloadFileName = `${monitoringResult.id}.${extension}`;
-      fs.writeFile(`results/${payloadFileName}`, result.data, (err) => {
-        if (err) {
-          throw err;
-        }
-      });
-    }
-
     const connection = getDbConnection();
-    connection.execute('update MonitoringResults set payloadFile = ? where id = ?',
-      [payloadFileName, monitoringResult.id]);
-
     connection.execute(
       'update MonitoredEndpoints set lastCheckedDate = ? where id = ?',
       [date, this.id],
