@@ -3,7 +3,7 @@ import { ResourceNotFoundError, InvalidArgumentError } from 'restify-errors';
 import { getDbConnection } from './database';
 import getUserIdFromAccessToken from './auth';
 import MonitoredEndpoint from '../models/monitoredEndpoint';
-import { createTask } from './monitoring';
+import { createTask, removeTask } from './monitoring';
 
 export async function getEndpointsHandler(
   req: restify.Request,
@@ -119,6 +119,66 @@ export async function postEndpointHandler(
         break;
       case 'InvalidArgumentError':
         httpCode = 400;
+        break;
+      default:
+        httpCode = 500;
+        break;
+    }
+    res.send(httpCode, { error: e.message });
+  }
+  next();
+}
+
+export async function deleteEndpointHandler(
+  req: restify.Request,
+  res: restify.Response,
+  next:restify.Next,
+): Promise<void> {
+  try {
+    const userId = await getUserIdFromAccessToken(req.headers['access-token']);
+
+    const connection = getDbConnection();
+
+    const [rows] = await connection.execute(
+      'select * from MonitoredEndpoints where id = ? and ownerId = ? limit 1',
+      [req.params.id, userId],
+    );
+
+    const result = JSON.parse(JSON.stringify(rows));
+    if (result.length === 0) {
+      throw new ResourceNotFoundError(`id ${req.params.id} doesn't correspond to any of your endpoints`);
+    }
+
+    removeTask(Number(req.params.id));
+
+    await connection.execute(
+      'delete from MonitoringResults where monitoredEndpointId = ?',
+      [req.params.id],
+    );
+
+    await connection.execute(
+      'delete from MonitoredEndpoints where id = ?',
+      [req.params.id],
+    );
+
+    const endpoint = new MonitoredEndpoint(
+      result[0].id,
+      result[0].name,
+      result[0].url,
+      result[0].createdDate,
+      result[0].monitoringInterval,
+      result[0].ownerId,
+    );
+
+    res.send(200, { data: endpoint });
+  } catch (e) {
+    let httpCode: number;
+    switch (e.name) {
+      case 'InvalidCredentialsError':
+        httpCode = 401;
+        break;
+      case 'ResourceNotFoundError':
+        httpCode = 404;
         break;
       default:
         httpCode = 500;
