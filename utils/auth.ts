@@ -1,14 +1,15 @@
+import { InvalidCredentialsError } from 'restify-errors';
 import { getDbConnection } from './database';
 
 export default async function getUserIdFromAcessToken(
   accessToken: string | string[] | undefined,
 ): Promise<number> {
   if (accessToken === undefined) {
-    throw new Error('missing accessToken header');
+    throw new InvalidCredentialsError('missing accessToken header');
   }
 
   if (typeof accessToken === 'object') {
-    throw new Error('invalid accessToken');
+    throw new InvalidCredentialsError('invalid accessToken');
   }
 
   const connection = getDbConnection();
@@ -19,7 +20,7 @@ export default async function getUserIdFromAcessToken(
   const result = JSON.parse(JSON.stringify(rows));
 
   if (result.length === 0) {
-    throw new Error('invalid access token');
+    throw new InvalidCredentialsError('invalid access token');
   }
   return result[0].id;
 }
