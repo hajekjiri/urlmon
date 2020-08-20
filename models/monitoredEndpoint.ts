@@ -13,6 +13,8 @@ export default class MonitoredEndpoint {
 
   createdDate: Date;
 
+  lastCheckedDate: Date | null;
+
   monitoringInterval: number;
 
   ownerId: number;
@@ -21,12 +23,14 @@ export default class MonitoredEndpoint {
     name: string,
     url: string,
     createdDate: Date,
+    lastCheckedDate: Date | null,
     monitoringInterval: number,
     ownerId: number) {
     this.id = id;
     this.name = name;
     this.url = url;
     this.createdDate = createdDate;
+    this.lastCheckedDate = lastCheckedDate;
     this.monitoringInterval = monitoringInterval;
     this.ownerId = ownerId;
   }

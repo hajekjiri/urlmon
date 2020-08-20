@@ -107,6 +107,7 @@ export async function postEndpointHandler(
       req.params.name,
       req.params.url,
       new Date(),
+      null,
       Number(req.params.monitoringInterval),
       userId,
     );
@@ -178,6 +179,7 @@ export async function deleteEndpointHandler(
       result[0].name,
       result[0].url,
       result[0].createdDate,
+      result[0].lastCheckedDate,
       result[0].monitoringInterval,
       result[0].ownerId,
     );
@@ -231,6 +233,7 @@ export async function patchEndpointHandler(
       result[0].name,
       result[0].url,
       result[0].createdDate,
+      result[0].lastCheckedDate,
       result[0].monitoringInterval,
       result[0].ownerId,
     );

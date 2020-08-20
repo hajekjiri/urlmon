@@ -14,6 +14,7 @@ export async function initializeTasks(): Promise<void> {
       result[i].name,
       result[i].url,
       result[i].createdDate,
+      result[i].lastCheckedDate,
       result[i].monitoringInterval,
       result[i].ownerId,
     );
@@ -58,6 +59,7 @@ export async function createTask(id: number): Promise<void> {
     result[0].name,
     result[0].url,
     result[0].createdDate,
+    result[0].lastCheckedDate,
     result[0].monitoringInterval,
     result[0].ownerId,
   );
