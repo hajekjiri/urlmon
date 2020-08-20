@@ -54,6 +54,10 @@ use `urlmon`;
 ```
 
 Use the `database/init.sql` script to initialize your database.
+```
+mysql> use urlmon;
+mysql> source database/init.sql;
+```
 
 #### 4. Install dependencies
 Install dependencies via npm.
