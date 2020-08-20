@@ -5,36 +5,45 @@ Urlmon is a microservice that allows you to monitor http/https URLs in the backg
 ## Getting started
 The easiest way to run Urlmon is to use Docker.
 ### Running with Docker
+#### Requirements
+* git
+* docker-compose
+
 #### 1. Clone the repository
 ```
 git clone https://github.com/hajekjiri/urlmon.git
 ```
 
-### 2. Create a .env file
+#### 2. Create a .env file
 Use the included `.env.example` file as a template and change the username and/or password of the database user as you please. If you'd like to change the name of the database or the hostname, you'll have to reflect those changes in `database/init.sql` and `docker-compose.yml` respectively.
 ```
 cp .env.example .env
 ```
 
-### 3. Run it
+#### 3. Run it
 Use docker-compose to run the service. Once initialized, it will be accessible at http://localhost:5000.
 ```
 docker-compose up
 ```
 
 ### Running without Docker
+#### Requirements
+* git
+* npm
+* MySQL database
+
 #### 1. Clone the repository
 ```
 git clone https://github.com/hajekjiri/urlmon.git
 ```
 
-### 2. Create a .env file
+#### 2. Create a .env file
 Use the included `.env.example` file as a template and change the variables to match your database.
 ```
 cp .env.example .env
 ```
 
-### 3. Initialize your database
+#### 3. Initialize your database
 Create a database according to the name you chose in `.env`. If you decided not to go with the default name `urlmon`, you'll have to edit the first line of the `database/init.sql` script.
 ```
 $ cat database/init.sql
@@ -46,13 +55,13 @@ use `urlmon`;
 
 Use the `database/init.sql` script to initialize your database.
 
-### 4. Install dependencies
+#### 4. Install dependencies
 Install dependencies via npm.
 ```
 npm install
 ```
 
-### 5. Run it
+#### 5. Run it
 Use the `start` npm script to run the service. Once initialized, it will be available at http://localhost:5000.
 ```
 npm run start
