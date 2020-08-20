@@ -2,10 +2,10 @@ import mysql from 'mysql2/promise';
 
 let db: void | mysql.Connection;
 
-export async function initDbConnection(_host: undefined | string): Promise<boolean> {
+export async function initDbConnection(): Promise<boolean> {
   try {
     db = await mysql.createConnection({
-      host: _host,
+      host: process.env.MYSQL_HOST,
       database: process.env.MYSQL_DATABASE,
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
