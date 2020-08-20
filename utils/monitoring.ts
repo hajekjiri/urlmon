@@ -28,7 +28,7 @@ export async function initializeTasks(): Promise<void> {
       setInterval(() => { endpoint.check(); }, endpoint.monitoringInterval * 1000),
     );
   }
-  console.log('Initialized all existing tasks');
+  console.log('Initialized all tasks for all existing endpoints');
 }
 
 export function removeTask(id: number): void {
