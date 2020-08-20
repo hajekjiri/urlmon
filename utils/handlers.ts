@@ -1,4 +1,5 @@
 import restify from 'restify';
+import { ResourceNotFoundError, InvalidArgumentError } from 'restify-errors';
 import { getDbConnection } from './database';
 import getUserIdFromAccessToken from './auth';
 
@@ -14,11 +15,18 @@ export async function getEndpointsHandler(
       'select * from MonitoredEndpoints where ownerId = ?',
       [userId],
     );
-    res.send({ data: rows });
+    res.send(200, { data: rows });
   } catch (e) {
-    res.send({
-      error: e.message,
-    });
+    let httpCode: number;
+    switch (e.name) {
+      case 'InvalidCredentialsError':
+        httpCode = 401;
+        break;
+      default:
+        httpCode = 500;
+        break;
+    }
+    res.send(httpCode, { error: e.message });
   }
   next();
 }
@@ -38,18 +46,28 @@ export async function getEndpointResultsHandler(
     let result = JSON.parse(JSON.stringify(rows));
 
     if (result.length === 0) {
-      throw new Error(`id ${req.params.id} doesn't correspond to any of your endpoints`);
+      throw new ResourceNotFoundError(`id ${req.params.id} doesn't correspond to any of your endpoints`);
     }
 
     if (result[0].id === null) {
       result = [];
     }
 
-    res.send({ data: result });
+    res.send(200, { data: result });
   } catch (e) {
-    res.send({
-      error: e.message,
-    });
+    let httpCode: number;
+    switch (e.name) {
+      case 'InvalidCredentialsError':
+        httpCode = 401;
+        break;
+      case 'ResourceNotFoundError':
+        httpCode = 404;
+        break;
+      default:
+        httpCode = 500;
+        break;
+    }
+    res.send(httpCode, { error: e.message });
   }
   next();
 }
