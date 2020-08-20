@@ -1,5 +1,6 @@
 import axios from 'axios';
 import urllib from 'url';
+import { InvalidArgumentError } from 'restify-errors';
 import MonitoringResult from './monitoringResult';
 import { getDbConnection } from '../utils/database';
 
@@ -32,20 +33,20 @@ export default class MonitoredEndpoint {
 
   async validate(): Promise<void> {
     if (this.name.length > 100) {
-      throw new Error('name of the endpoint must not exceed 100 characters');
+      throw new InvalidArgumentError('name of the endpoint must not exceed 100 characters');
     }
 
     if (this.name.length > 100) {
-      throw new Error('url of the endpoint must not exceed 100 characters');
+      throw new InvalidArgumentError('url of the endpoint must not exceed 100 characters');
     }
 
     const parsedUrl = urllib.parse(this.url);
     if (parsedUrl.protocol !== 'http' && parsedUrl.protocol !== 'https') {
-      throw new Error('invalid protocol - only http and https are supported');
+      throw new InvalidArgumentError('invalid protocol - only http and https are supported');
     }
 
     if (this.monitoringInterval < 60) {
-      throw new Error('monitoringInterval must not be shorter than 60 seconds');
+      throw new InvalidArgumentError('monitoringInterval must not be shorter than 60 seconds');
     }
 
     const connection = getDbConnection();
