@@ -4,7 +4,7 @@ import { getDbPool } from './database';
 export default async function getUserIdFromAcessToken(
   accessToken: string | string[] | undefined,
 ): Promise<number> {
-  if (accessToken === undefined) {
+  if (!accessToken) {
     throw new InvalidCredentialsError('missing accessToken header');
   }
 
