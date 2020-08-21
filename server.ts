@@ -23,9 +23,16 @@ async function main() {
   console.log('Connecting to database ...');
 
   /* eslint-disable no-await-in-loop */
-  while (!await initDbConnection()) {
-    console.log('db connection failed, retrying in 5 seconds ...');
-    await new Promise((resolve) => { setTimeout(resolve, 5000); });
+  let done = false;
+  while (!done) {
+    try {
+      await initDbConnection();
+      done = true;
+    } catch (e) {
+      console.log(e.message);
+      console.log('db connection failed, retrying in 5 seconds ...');
+      await new Promise((resolve) => { setTimeout(resolve, 5000); });
+    }
   }
   /* eslint-enable no-await-in-loop */
 

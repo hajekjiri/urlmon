@@ -1,25 +1,18 @@
 import mysql from 'mysql2/promise';
 
-let db: void | mysql.Connection;
+let db: mysql.Pool;
 
-export async function initDbConnection(): Promise<boolean> {
-  try {
-    db = await mysql.createConnection({
-      host: process.env.MYSQL_HOST,
-      database: process.env.MYSQL_DATABASE,
-      user: process.env.MYSQL_USER,
-      password: process.env.MYSQL_PASSWORD,
-    });
-  } catch (e) {
-    console.log(e.message);
-    return false;
-  }
-  return true;
+export async function initDbConnection(): Promise<void> {
+  db = mysql.createPool({
+    connectionLimit: 10,
+    host: process.env.MYSQL_HOST,
+    database: process.env.MYSQL_DATABASE,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+  });
+  await db.getConnection();
 }
 
-export function getDbConnection(): mysql.Connection {
-  if (!db) {
-    throw new Error('database is not initialized');
-  }
+export function getDbPool(): mysql.Pool {
   return db;
 }

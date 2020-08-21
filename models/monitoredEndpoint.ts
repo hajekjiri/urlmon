@@ -2,7 +2,7 @@ import axios from 'axios';
 import urllib from 'url';
 import { InvalidArgumentError } from 'restify-errors';
 import MonitoringResult from './monitoringResult';
-import { getDbConnection } from '../utils/database';
+import { getDbPool } from '../utils/database';
 
 export default class MonitoredEndpoint {
   id: number | null;
@@ -53,8 +53,8 @@ export default class MonitoredEndpoint {
       throw new InvalidArgumentError('monitoringInterval must not be shorter than 60 seconds');
     }
 
-    const connection = getDbConnection();
-    const [rows] = await connection.execute(
+    const pool = getDbPool();
+    const [rows] = await pool.execute(
       'select id from Users where `id` = ?',
       [this.ownerId],
     );
@@ -71,8 +71,8 @@ export default class MonitoredEndpoint {
       throw new Error('cannot save MonitoredEndpoint with non-null id');
     }
     await this.validate();
-    const connection = getDbConnection();
-    const [info] = await connection.execute(
+    const pool = getDbPool();
+    const [info] = await pool.execute(
       'insert into MonitoredEndpoints values (null, ?, ?, ?, null, ?, ?)',
       [this.name, this.url, this.createdDate, this.monitoringInterval, this.ownerId],
     );
@@ -119,8 +119,8 @@ export default class MonitoredEndpoint {
 
     await monitoringResult.save();
 
-    const connection = getDbConnection();
-    connection.execute(
+    const pool = getDbPool();
+    pool.execute(
       'update MonitoredEndpoints set lastCheckedDate = ? where id = ?',
       [date, this.id],
     );

@@ -1,11 +1,11 @@
-import { getDbConnection } from './database';
+import { getDbPool } from './database';
 import MonitoredEndpoint from '../models/monitoredEndpoint';
 
 const tasks = new Map<number, NodeJS.Timeout>();
 
 export async function initializeTasks(): Promise<void> {
-  const connection = getDbConnection();
-  const [rows] = await connection.execute('select * from MonitoredEndpoints');
+  const pool = getDbPool();
+  const [rows] = await pool.execute('select * from MonitoredEndpoints');
   const result = JSON.parse(JSON.stringify(rows));
 
   for (let i = 0; i < result.length; i += 1) {
@@ -42,9 +42,9 @@ export function removeTask(id: number): void {
 }
 
 export async function createTask(id: number): Promise<void> {
-  const connection = getDbConnection();
+  const pool = getDbPool();
 
-  const [rows] = await connection.execute(
+  const [rows] = await pool.execute(
     'select * from MonitoredEndpoints where id = ? limit 1', [id],
   );
 

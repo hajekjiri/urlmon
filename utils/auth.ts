@@ -1,5 +1,5 @@
 import { InvalidCredentialsError } from 'restify-errors';
-import { getDbConnection } from './database';
+import { getDbPool } from './database';
 
 export default async function getUserIdFromAcessToken(
   accessToken: string | string[] | undefined,
@@ -12,8 +12,8 @@ export default async function getUserIdFromAcessToken(
     throw new InvalidCredentialsError('invalid accessToken');
   }
 
-  const connection = getDbConnection();
-  const [rows] = await connection.execute(
+  const pool = getDbPool();
+  const [rows] = await pool.execute(
     'select id from Users where accessToken = ? limit 1',
     [accessToken],
   );

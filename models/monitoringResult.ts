@@ -1,4 +1,4 @@
-import { getDbConnection } from '../utils/database';
+import { getDbPool } from '../utils/database';
 
 export default class MonitoringResult {
   id: number | null;
@@ -51,8 +51,8 @@ export default class MonitoringResult {
       console.log(`new length: ${this.error.length}`);
     }
 
-    const connection = getDbConnection();
-    const [rows] = await connection.execute(
+    const pool = getDbPool();
+    const [rows] = await pool.execute(
       'select id from MonitoredEndpoints where `id` = ?',
       [this.monitoredEndpointId],
     );
@@ -69,8 +69,8 @@ export default class MonitoringResult {
       throw new Error('cannot save MonitoringResult with non-null id');
     }
     await this.validate();
-    const connection = getDbConnection();
-    const [info] = await connection.execute(
+    const pool = getDbPool();
+    const [info] = await pool.execute(
       'insert into MonitoringResults values (null, ?, ?, ?, ?, ?, ?)',
       [this.checkedDate, this.httpCode, this.contentType, this.payload, this.error,
         this.monitoredEndpointId],

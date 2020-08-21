@@ -1,6 +1,6 @@
 import restify from 'restify';
 import { ResourceNotFoundError, InvalidArgumentError } from 'restify-errors';
-import { getDbConnection } from './database';
+import { getDbPool } from './database';
 import getUserIdFromAccessToken from './auth';
 import MonitoredEndpoint from '../models/monitoredEndpoint';
 import { createTask, removeTask } from './monitoring';
@@ -12,8 +12,8 @@ export async function getEndpointsHandler(
 ): Promise<void> {
   try {
     const userId = await getUserIdFromAccessToken(req.headers['access-token']);
-    const connection = getDbConnection();
-    const [rows] = await connection.execute(
+    const pool = getDbPool();
+    const [rows] = await pool.execute(
       'select * from MonitoredEndpoints where ownerId = ?',
       [userId],
     );
@@ -46,8 +46,8 @@ export async function getEndpointResultsHandler(
 ): Promise<void> {
   try {
     const userId = await getUserIdFromAccessToken(req.headers['access-token']);
-    const connection = getDbConnection();
-    const [rows] = await connection.execute(
+    const pool = getDbPool();
+    const [rows] = await pool.execute(
       'select mr.* from MonitoredEndpoints me left join MonitoringResults mr on me.id = mr.monitoredEndpointId where me.id = ? and ownerId = ? order by checkedDate desc limit 10',
       [req.params.id, userId],
     );
@@ -90,8 +90,8 @@ export async function getResultHandler(
 ): Promise<void> {
   try {
     const userId = await getUserIdFromAccessToken(req.headers['access-token']);
-    const connection = getDbConnection();
-    const [rows] = await connection.execute(
+    const pool = getDbPool();
+    const [rows] = await pool.execute(
       'select mr.* from MonitoringResults mr join MonitoredEndpoints me on mr.monitoredEndpointId = me.id where mr.id = ? and ownerId = ? limit 1',
       [req.params.id, userId],
     );
@@ -190,9 +190,9 @@ export async function deleteEndpointHandler(
   try {
     const userId = await getUserIdFromAccessToken(req.headers['access-token']);
 
-    const connection = getDbConnection();
+    const pool = getDbPool();
 
-    const [rows] = await connection.execute(
+    const [rows] = await pool.execute(
       'select * from MonitoredEndpoints where id = ? and ownerId = ? limit 1',
       [req.params.id, userId],
     );
@@ -204,12 +204,12 @@ export async function deleteEndpointHandler(
 
     removeTask(Number(req.params.id));
 
-    await connection.execute(
+    await pool.execute(
       'delete from MonitoringResults where monitoredEndpointId = ?',
       [req.params.id],
     );
 
-    await connection.execute(
+    await pool.execute(
       'delete from MonitoredEndpoints where id = ?',
       [req.params.id],
     );
@@ -254,9 +254,9 @@ export async function patchEndpointHandler(
   try {
     const userId = await getUserIdFromAccessToken(req.headers['access-token']);
 
-    const connection = getDbConnection();
+    const pool = getDbPool();
 
-    const [rows] = await connection.execute(
+    const [rows] = await pool.execute(
       'select * from MonitoredEndpoints where id = ? and ownerId = ? limit 1',
       [req.params.id, userId],
     );
@@ -292,7 +292,7 @@ export async function patchEndpointHandler(
 
     await endpoint.validate();
 
-    await connection.execute(
+    await pool.execute(
       'update MonitoredEndpoints set name = ?, url = ?, monitoringInterval = ? where id = ?',
       [endpoint.name, endpoint.url, endpoint.monitoringInterval, req.params.id],
     );
