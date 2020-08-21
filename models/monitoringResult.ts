@@ -1,3 +1,4 @@
+import mime from 'mime-types';
 import { getDbPool } from '../utils/database';
 
 export default class MonitoringResult {
@@ -42,8 +43,14 @@ export default class MonitoringResult {
       throw new Error(`${this.httpCode} is not a valid http code`);
     }
 
-    if (this.contentType && this.contentType.length > 100) {
-      this.contentType = this.contentType.substr(0, 100);
+    if (this.contentType) {
+      if (!mime.extension(this.contentType)) {
+        throw new Error('invalid contentType');
+      }
+
+      if (this.contentType.length > 100) {
+        this.contentType = this.contentType.substr(0, 100);
+      }
     }
 
     if (this.error && this.error.length > 200) {
