@@ -29,7 +29,7 @@ docker-compose up
 ### Running without Docker
 #### Requirements
 * git
-* npm
+* Node.js
 * MySQL database
 
 #### 1. Clone the repository
