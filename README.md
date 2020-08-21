@@ -230,7 +230,7 @@ $ curl -s http://localhost:5000/endpoints -H 'access-token: 93f39e2f-80de-4033-9
 ```
 
 #### GET /endpoint/:id/results
-List last 10 monitoring results for the monitored endpoint with matching id. The requesting user must own the endpoint.
+List last 10 monitoring results for the monitored endpoint with matching id. The requesting user must own the monitored endpoint.
 ##### Responses
 * 200/OK
 * 400/Bad Request
@@ -239,8 +239,127 @@ List last 10 monitoring results for the monitored endpoint with matching id. The
 * 500/Internal Server Error
 ##### Example
 ```
-$ curl -s http://localhost:5000/endpoint/1/results -H 'access-token: 93f39e2f-80de-4033-99ee-249d92736a25' | jq
-# skipping 1.4 MB of output ...
+# skipping payloads because they are too large to display
+$ curl -s 'http://localhost:5000/endpoint/1/results' -H 'access-token: 93f39e2f-80de-4033-99ee-249d92736a25' | jq
+{
+  "data": [
+    {
+      "id": 3580,
+      "checkedDate": "2020-08-21T07:37:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    },
+    {
+      "id": 3566,
+      "checkedDate": "2020-08-21T07:36:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    },
+    {
+      "id": 3553,
+      "checkedDate": "2020-08-21T07:35:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    },
+    {
+      "id": 3540,
+      "checkedDate": "2020-08-21T07:34:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    },
+    {
+      "id": 3526,
+      "checkedDate": "2020-08-21T07:33:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    },
+    {
+      "id": 3513,
+      "checkedDate": "2020-08-21T07:32:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    },
+    {
+      "id": 3500,
+      "checkedDate": "2020-08-21T07:31:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    },
+    {
+      "id": 3487,
+      "checkedDate": "2020-08-21T07:30:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    },
+    {
+      "id": 3474,
+      "checkedDate": "2020-08-21T07:29:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    },
+    {
+      "id": 3461,
+      "checkedDate": "2020-08-21T07:28:55.000Z",
+      "httpCode": 200,
+      "contentType": "text/html; charset=utf-8",
+      "payload": ...,
+      "error": null,
+      "monitoredEndpointId": 1
+    }
+  ]
+}
+```
+
+#### GET /result/:id
+Returns the monitoring result with matching id. The requesting user must own the associated endpoint.
+##### Responses
+* 200/OK
+* 400/Bad Request
+* 401/Unauthorized
+* 404/Not Found
+* 500/Internal Server Error
+##### Example
+```
+# skipping payload because it is too large to display
+$ curl -s http://localhost:5000/result/1665 -H 'access-token: 93f39e2f-80de-4033-99ee-249d92736a25' | jq
+{
+  "data": {
+    "id": 1665,
+    "checkedDate": "2020-08-20T18:16:45.000Z",
+    "httpCode": 200,
+    "contentType": "text/html; charset=utf-8",
+    "payload": ...,
+    "error": null,
+    "monitoredEndpointId": 1
+  }
+}
 ```
 
 #### POST /endpoint
@@ -285,7 +404,7 @@ $ curl -s http://localhost:5000/endpoint -H 'access-token: 93f39e2f-80de-4033-99
 ```
 
 #### PATCH /endpoint/:id
-Update the monitored endpoint with matching id. The requesting user must own the endpoint. Returns the updated monitored endpoint.
+Update the monitored endpoint with matching id. The requesting user must own the monitored endpoint. Returns the updated monitored endpoint.
 ##### Fields
 * all fields except those listed below are ignored
 ###### name
@@ -326,7 +445,7 @@ $ curl -s http://localhost:5000/endpoint/10 -H 'access-token: 93f39e2f-80de-4033
 ```
 
 #### DEL /endpoint/:id
-Delete the monitored endpoint with matching id. The requesting user must own the endpoint. Returns the deleted monitored endpoint.
+Delete the monitored endpoint with matching id. The requesting user must own the monitored endpoint. Returns the deleted monitored endpoint.
 ##### Responses
 * 200/OK
 * 400/Bad Request
