@@ -256,7 +256,7 @@ describe('MonitoredEndpoint', () => {
   });
 
   describe('saving to database', () => {
-    it('should succeed for a valid model', async () => {
+    it('should succeed for a valid endpoint', async () => {
       const endpoint = new MonitoredEndpoint(
         null,
         'Testing endpoint',
@@ -286,7 +286,7 @@ describe('MonitoredEndpoint', () => {
       chai.assert.typeOf(endpoint.id, 'number');
     });
 
-    it('should fail for an invalid model', async () => {
+    it('should fail for an invalid endpoint', async () => {
       const endpoint = new MonitoredEndpoint(
         null,
         'Te',
