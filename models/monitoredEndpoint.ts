@@ -80,11 +80,14 @@ export default class MonitoredEndpoint {
     this.id = result.insertId;
   }
 
-  async check(): Promise<void> {
+  async check(enableLogging: boolean = true): Promise<void> {
     if (this.id === null) {
       throw new Error('cannot check MonitoredEndpoint with null id');
     }
-    console.log(`[${new Date().toISOString()}] Checking #${this.id} | ${this.name} | ${this.url} ...`);
+
+    if (enableLogging) {
+      console.log(`[${new Date().toISOString()}] Checking #${this.id} | ${this.name} | ${this.url} ...`);
+    }
 
     const date = new Date();
     let errorResponse: any = null;
