@@ -174,7 +174,7 @@ insert into Users values (null, 'John Doe', 'john@doe.xyz', 'hb6fk9x3-978c-fr4l-
 * cannot be null
 * maximum length is 50 characters
 
-## REST API endpoints
+## REST API documentation
 ### Authentication
 All endpoints require authentication. You are expected to store your access token in a header called `access-token`.
 
