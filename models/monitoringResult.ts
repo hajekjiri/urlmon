@@ -55,7 +55,6 @@ export default class MonitoringResult {
 
     if (this.error && this.error.length > 200) {
       this.error = this.error.substr(0, 200);
-      console.log(`new length: ${this.error.length}`);
     }
 
     const pool = getDbPool();
