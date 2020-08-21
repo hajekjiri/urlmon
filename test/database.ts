@@ -3,7 +3,7 @@ import { initDbConnection, getDbPool } from '../utils/database';
 
 describe('database', () => {
   describe('configuration', () => {
-    it('should be stored in the .env file', () => {
+    it('should be stored in .env and contain all fields from .env.example', () => {
       dotenv.config();
     });
   });
