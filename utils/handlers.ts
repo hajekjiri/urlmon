@@ -266,8 +266,6 @@ export async function patchEndpointHandler(
       throw new ResourceNotFoundError(`id ${req.params.id} doesn't correspond to any of your endpoints`);
     }
 
-    removeTask(Number(req.params.id));
-
     const endpoint = new MonitoredEndpoint(
       result[0].id,
       result[0].name,
@@ -297,6 +295,7 @@ export async function patchEndpointHandler(
       [endpoint.name, endpoint.url, endpoint.monitoringInterval, req.params.id],
     );
 
+    removeTask(Number(req.params.id));
     await createTask(req.params.id);
 
     res.send(200, { data: endpoint });
