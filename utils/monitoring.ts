@@ -3,6 +3,10 @@ import MonitoredEndpoint from '../models/monitoredEndpoint';
 
 const tasks = new Map<number, NodeJS.Timeout>();
 
+export function getTasks(): Map<number, NodeJS.Timeout> {
+  return tasks;
+}
+
 export async function initializeTasks(): Promise<void> {
   const pool = getDbPool();
   const [rows] = await pool.execute('select * from MonitoredEndpoints');
