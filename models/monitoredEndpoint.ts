@@ -123,7 +123,7 @@ export default class MonitoredEndpoint {
     await monitoringResult.save();
 
     const pool = getDbPool();
-    pool.execute(
+    await pool.execute(
       'update MonitoredEndpoints set lastCheckedDate = ? where id = ?',
       [date, this.id],
     );
