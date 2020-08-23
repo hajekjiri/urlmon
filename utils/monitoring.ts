@@ -44,6 +44,7 @@ export function removeTask(id: number, enableLogging: boolean = true): void {
     throw new Error(`cannot remove task - there is no active task with id ${id}`);
   }
   clearTimeout(task);
+  tasks.delete(id);
   if (enableLogging) {
     console.log(`Removed task #${id}`);
   }
