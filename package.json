@@ -4,7 +4,7 @@
   "description": "Node.js microservice for monitoring http(s) URLs",
   "main": "server.ts",
   "scripts": {
-    "test": "ts-mocha test/**/*.ts",
+    "test": "ts-mocha --timeout 5000 test/**/*.ts",
     "build": "rm -rf build && tsc",
     "start": "ts-node server.ts",
     "start-dev": "nodemon",
