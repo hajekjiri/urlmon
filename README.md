@@ -15,7 +15,7 @@ git clone https://github.com/hajekjiri/urlmon.git
 ```
 
 #### 2. Create a .env file
-Use the included `.env.example` file as a template and change the username and/or password of the database user as you please. If you'd like to change the name of the database or the hostname, you'll have to reflect those changes in `database/init.sql` and `docker-compose.yml` respectively.
+Use the included `.env.example` file as a template and change the username and/or password of the database admin as you please. If you'd like to change the name of the database or the hostname, you'll have to reflect those changes in `database/init.sql` and `docker-compose.yml` respectively.
 ```
 cp .env.example .env
 ```
@@ -72,7 +72,7 @@ npm run start
 ```
 
 ## Note: managing users
-There is currently no API to manage users. 2 users of them are included out-of-the-box with the the `database/init.sql` script but other than that, you'll have to manage them manually with SQL queries.
+There is currently no API to manage users. Two users are included out-of-the-box with the the `database/init.sql` script but other than that, you'll have to manage them manually with SQL queries.
 ```
 insert into Users values (null, 'John Doe', 'john@doe.xyz', 'hb6fk9x3-978c-fr4l-8y8a-gnn4hj98fdn4');
 --                               ^ username  ^ email         ^ alphanumeric access token
