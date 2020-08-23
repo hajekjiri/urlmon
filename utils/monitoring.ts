@@ -76,7 +76,7 @@ export async function createTask(id: number, enableLogging: boolean = true): Pro
     throw new Error('cannot initialize task for endpoint with null id');
   }
 
-  endpoint.check(enableLogging);
+  await endpoint.check(enableLogging);
   tasks.set(
     endpoint.id,
     setInterval(() => { endpoint.check(enableLogging); }, endpoint.monitoringInterval * 1000),
