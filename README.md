@@ -38,7 +38,7 @@ git clone https://github.com/hajekjiri/urlmon.git
 ```
 
 #### 2. Create a .env file
-Use the included `.env.example` file as a template and change the variables to match your database.
+Use the included `.env.example` file as a template and modify the values to match your database.
 ```
 cp .env.example .env
 ```
@@ -75,7 +75,7 @@ npm run start
 There is currently no API to manage users. Two users are included out-of-the-box with the the `database/init.sql` script but other than that, you'll have to manage them manually with SQL queries.
 ```
 insert into Users values (null, 'John Doe', 'john@doe.xyz', 'hb6fk9x3-978c-fr4l-8y8a-gnn4hj98fdn4');
---                               ^ username  ^ email         ^ alphanumeric access token
+--                               ^ username  ^ email         ^ access token
 ```
 
 ## Data model and constraints
@@ -372,18 +372,18 @@ Create a new monitored endpoint for the authenticated user. Returns the created 
 ###### name
 * name of the monitored endpoint
 * string
-* cannot be null
+* required
 * must be between 3 and 100 characters long
 ###### url
 * url of the monitored endpoint
 * must use http or https
 * string
-* cannot be null
+* required
 * maximum length is 100 characters
 ###### monitoringInterval
 * how often the monitored endpoint gets checked in seconds, i.e. the monitored endpoint gets checked every `monitoringInterval` seconds
 * integer
-* cannot be null
+* required
 ##### Responses
 * 201/Created
 * 400/Bad Request
@@ -410,21 +410,22 @@ $ curl -s http://localhost:5000/endpoint -H 'access-token: 93f39e2f-80de-4033-99
 Update the monitored endpoint with matching id. The requesting user must own the monitored endpoint. Returns the updated monitored endpoint.
 ##### Fields
 * all fields except those listed below are ignored
+* none of the fields are required so an empty request will still succeed with code 200/OK even though it doesn't update anything
 ###### name
 * name of the monitored endpoint
 * string
-* can be null
+* not required
 * must be between 3 and 100 characters long
 ###### url
 * url of the monitored endpoint
 * must use http or https
 * string
-* can be null
+* not required
 * maximum length is 100 characters
 ###### monitoringInterval
 * how often the monitored endpoint gets checked in seconds, i.e. the monitored endpoint gets checked every `monitoringInterval` seconds
 * integer
-* can be null
+* not required
 ##### Responses
 * 200/OK
 * 400/Bad Request
