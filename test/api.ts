@@ -77,7 +77,7 @@ describe('api', () => {
   after(async () => {
     // delete testing results
     await pool.execute(
-      'delete from MonitoringResults where id in (select mr.id from MonitoredEndpoints me join MonitoringResults mr on me.id = mr.monitoredEndpointId where ownerId = ?)',
+      'delete from MonitoringResults where monitoredEndpointId in (select id from MonitoredEndpoints where ownerId = ?)',
       [userId],
     ).catch((e) => {
       throw new Error(`failed to delete testing results from database: ${e.message}`);
