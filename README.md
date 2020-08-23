@@ -178,6 +178,9 @@ insert into Users values (null, 'John Doe', 'john@doe.xyz', 'hb6fk9x3-978c-fr4l-
 ### Authentication
 All endpoints require authentication. You are expected to store your access token in a header called `access-token`.
 
+### Sending data
+When sending data, you can either use the `application/json` or `multipart/form-data` content type. As for the examples below, I decided to use cURL for sending requests, send data in the `multipart/form-data` format, and use jq to pretty-print JSON responses.
+
 ### Returned data
 #### Success
 ```
