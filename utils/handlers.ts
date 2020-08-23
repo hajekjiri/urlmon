@@ -130,25 +130,25 @@ export async function postEndpointHandler(
 ): Promise<void> {
   try {
     const userId = await getUserIdFromAccessToken(req.headers['access-token']);
-    if (!req.params.name) {
+    if (!req.body.name) {
       throw new InvalidArgumentError('missing name field');
     }
 
-    if (!req.params.url) {
+    if (!req.body.url) {
       throw new InvalidArgumentError('missing url field');
     }
 
-    if (!req.params.monitoringInterval) {
+    if (!req.body.monitoringInterval) {
       throw new InvalidArgumentError('missing monitoringInterval field');
     }
 
     const endpoint = new MonitoredEndpoint(
       null,
-      req.params.name,
-      req.params.url,
+      req.body.name,
+      req.body.url,
       new Date(),
       null,
-      Number(req.params.monitoringInterval),
+      Number(req.body.monitoringInterval),
       userId,
     );
 
@@ -276,16 +276,16 @@ export async function patchEndpointHandler(
       result[0].ownerId,
     );
 
-    if (req.params.name) {
-      endpoint.name = req.params.name;
+    if (req.body.name) {
+      endpoint.name = req.body.name;
     }
 
-    if (req.params.url) {
-      endpoint.url = req.params.url;
+    if (req.body.url) {
+      endpoint.url = req.body.url;
     }
 
-    if (req.params.monitoringInterval) {
-      endpoint.monitoringInterval = Number(req.params.monitoringInterval);
+    if (req.body.monitoringInterval) {
+      endpoint.monitoringInterval = Number(req.body.monitoringInterval);
     }
 
     await endpoint.validate();
