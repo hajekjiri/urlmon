@@ -7,7 +7,7 @@ export function getTasks(): Map<number, NodeJS.Timeout> {
   return tasks;
 }
 
-export async function initializeTasks(): Promise<void> {
+export async function initializeTasks(enableLogging: boolean = true): Promise<void> {
   const pool = getDbPool();
   const [rows] = await pool.execute('select * from MonitoredEndpoints');
   const result = JSON.parse(JSON.stringify(rows));
@@ -27,25 +27,29 @@ export async function initializeTasks(): Promise<void> {
       throw new Error('cannot initialize task for endpoint with null id');
     }
 
-    endpoint.check();
+    endpoint.check(enableLogging);
     tasks.set(
       endpoint.id,
-      setInterval(() => { endpoint.check(); }, endpoint.monitoringInterval * 1000),
+      setInterval(() => { endpoint.check(enableLogging); }, endpoint.monitoringInterval * 1000),
     );
   }
-  console.log('Initialized tasks for all existing endpoints');
+  if (enableLogging) {
+    console.log('Initialized tasks for all existing endpoints');
+  }
 }
 
-export function removeTask(id: number): void {
+export function removeTask(id: number, enableLogging: boolean = true): void {
   const task = tasks.get(id);
   if (!task) {
     throw new Error(`cannot remove task - there is no active task with id ${id}`);
   }
   clearTimeout(task);
-  console.log(`Removed task #${id}`);
+  if (enableLogging) {
+    console.log(`Removed task #${id}`);
+  }
 }
 
-export async function createTask(id: number): Promise<void> {
+export async function createTask(id: number, enableLogging: boolean = true): Promise<void> {
   const pool = getDbPool();
 
   const [rows] = await pool.execute(
@@ -72,11 +76,13 @@ export async function createTask(id: number): Promise<void> {
     throw new Error('cannot initialize task for endpoint with null id');
   }
 
-  endpoint.check();
+  endpoint.check(enableLogging);
   tasks.set(
     endpoint.id,
-    setInterval(() => { endpoint.check(); }, endpoint.monitoringInterval * 1000),
+    setInterval(() => { endpoint.check(enableLogging); }, endpoint.monitoringInterval * 1000),
   );
 
-  console.log(`Created task #${endpoint.id} | ${endpoint.name} | ${endpoint.url}`);
+  if (enableLogging) {
+    console.log(`Created task #${endpoint.id} | ${endpoint.name} | ${endpoint.url}`);
+  }
 }
