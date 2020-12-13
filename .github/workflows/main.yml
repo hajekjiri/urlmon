@@ -1,0 +1,13 @@
+name: DX Scanner
+on: push
+jobs:
+  dx-scanner:
+    runs-on: ubuntu-latest
+    container: dxheroes/dx-scanner:latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Runs DX Scanner on the code
+        env:
+          GITHUB_TOKEN: ${GITHUB_TOKEN}
+          DXSCANNER_API_TOKEN: ${DXSCANNER_API_TOKEN}
+        run: dx-scanner run --ci
