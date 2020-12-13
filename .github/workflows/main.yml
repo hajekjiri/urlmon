@@ -8,6 +8,6 @@ jobs:
       - uses: actions/checkout@v1
       - name: Runs DX Scanner on the code
         env:
-          GITHUB_TOKEN: ${GH_TOKEN}
-          DXSCANNER_API_TOKEN: ${DXSCANNER_API_TOKEN}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          DXSCANNER_API_TOKEN: ${{ secrets.DXSCANNER_API_TOKEN }}
         run: dx-scanner run --ci
